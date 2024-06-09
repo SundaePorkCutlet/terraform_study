@@ -1,0 +1,36 @@
+resource "aws_vpc" "default" {
+  cidr_block = "10.0.0.0/16"
+  tags = {
+    Name = "terraform-vpc"
+  }
+}
+
+resource "aws_subnet" "public_subnet_1" {
+  vpc_id     = aws_vpc.default.id
+  cidr_block = "10.0.0.0/24"
+  availability_zone = "ap-northeast-2a"
+
+  tags = {
+    Name = "terraform-public-subnet_1"
+  }
+}
+
+resource "aws_subnet" "private_subnet_1" {
+  vpc_id     = aws_vpc.default.id
+  cidr_block = "10.0.10.0/24"
+  //nat게이트웨이는 왠만하면 같게 사용하는게 좋다.
+  availability_zone = "ap-northeast-2a"
+
+  tags = {
+    Name = "terraform-private-subnet_1"
+  }
+}
+
+resource "aws_nat_gateway" "private_nat" {
+  connectivity_type = "private"
+  subnet_id         = aws_subnet.private_subnet_1.id
+}
+
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.default.id
+}
