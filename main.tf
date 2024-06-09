@@ -13,4 +13,10 @@ provider "aws" {
 
 module "custom_vpc" {
   source = "./custom_vpc"
+  env = "dev"
+}
+
+module "prd_custom_vpc" {
+  source = "./custom_vpc"
+  env = "prd"
 }
