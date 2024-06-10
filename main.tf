@@ -5,29 +5,48 @@ terraform {
       version = "4.48.0"
     }
   }
+
+  backend "s3" {
+    bucket = "junho-tf-backend-bucket"
+    key    = "terraform.tfstate"
+    region = "ap-northeast-2"
+  }
 }
 
 provider "aws" {
   region = "ap-northeast-2"
 }
 
-module "custom_vpc" {
-  source = "./custom_vpc"
-  env = "dev"
-}
+# module "custom_vpc" {
+#   source = "./custom_vpc"
+#   env = "dev"
+# }
 
-module "prd_custom_vpc" {
-  source = "./custom_vpc"
-  env = "prd"
-}
+# module "prd_custom_vpc" {
+#   source = "./custom_vpc"
+#   env = "prd"
+# }
 
-variable "names" {
+variable "envs" {
   type = list(string)
-  default = ["junho","leader"]
+  default = ["dev","prd",""]
 } 
 
-module "personal_custom_vpc" {
-  for_each = toset(var.names)
+module "vpc_list" {
+  for_each = toset([for env in var.envs : env if env != ""])
   source = "./custom_vpc"
-  env = "personal_${each.value}"
+  env = "${each.value}"
+}
+
+resource "aws_s3_bucket" "tf_backend" {
+  bucket = "junho-tf-backend-bucket"
+  acl    = "private"
+  
+  versioning {
+    enabled = true
+  }
+
+  tags = {
+    Name        = "Terraform-bucket"
+  }
 }
