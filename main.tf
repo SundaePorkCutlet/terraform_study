@@ -6,10 +6,20 @@ terraform {
     }
   }
 
-  backend "s3" {
-    bucket = "junho-tf-backend-bucket"
-    key    = "terraform.tfstate"
-    region = "ap-northeast-2"
+  //테라폼 클라우드로 마이그레이션
+  # backend "s3" {
+  #   bucket = "junho-tf-backend-bucket"
+  #   key    = "terraform.tfstate"
+  #   region = "ap-northeast-2"
+  # }
+
+  cloud {
+    hostname = "app.terraform.io"
+    organization = "junho-terraform"
+
+    workspaces {
+      name = "fastcompus-prd"
+    }
   }
 }
 

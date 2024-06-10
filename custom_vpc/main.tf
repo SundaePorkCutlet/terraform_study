@@ -6,7 +6,7 @@ resource "aws_vpc" "default" {
 }
 
 resource "aws_subnet" "public_subnet_1" {
-  count = var.env == "prd" ? 0 : 1
+  count = var.env == "fastcampus-prd" ? 0 : 1
   vpc_id     = aws_vpc.default.id
   cidr_block = "10.0.0.0/24"
   availability_zone = local.az_a
