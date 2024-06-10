@@ -20,3 +20,14 @@ module "prd_custom_vpc" {
   source = "./custom_vpc"
   env = "prd"
 }
+
+variable "names" {
+  type = list(string)
+  default = ["junho","leader"]
+} 
+
+module "personal_custom_vpc" {
+  for_each = toset(var.names)
+  source = "./custom_vpc"
+  env = "personal_${each.value}"
+}

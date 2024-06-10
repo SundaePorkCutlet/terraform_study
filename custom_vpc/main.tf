@@ -25,20 +25,20 @@ resource "aws_subnet" "private_subnet_1" {
     Name = "terraform-private-subnet_1_${var.env}"
   }
 }
+//비싸요
+# resource "aws_nat_gateway" "private_nat" {
+#   connectivity_type = "private"
+#   subnet_id         = aws_subnet.private_subnet_1.id
 
-resource "aws_nat_gateway" "private_nat" {
-  connectivity_type = "private"
-  subnet_id         = aws_subnet.private_subnet_1.id
+#     tags = {
+#         Name = "terraform-nat_${var.env}"
+#     } 
+# }
 
-    tags = {
-        Name = "terraform-nat_${var.env}"
-    } 
-}
+# resource "aws_internet_gateway" "igw" {
+#   vpc_id = aws_vpc.default.id
 
-resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.default.id
-
-    tags = {
-        Name = "terraform-igw_${var.env}"
-    }
-}
+#     tags = {
+#         Name = "terraform-igw_${var.env}"
+#     }
+# }
