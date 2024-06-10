@@ -18,7 +18,7 @@ terraform {
     organization = "junho-terraform"
 
     workspaces {
-      name = "fastcompus-prd"
+      name = "fastcampus-prd"
     }
   }
 }
