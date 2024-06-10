@@ -27,26 +27,39 @@ provider "aws" {
 #   env = "prd"
 # }
 
-variable "envs" {
-  type = list(string)
-  default = ["dev","prd",""]
-} 
+# variable "envs" {
+#   type    = list(string)
+#   default = ["dev", "prd", ""]
+# }
 
-module "vpc_list" {
-  for_each = toset([for env in var.envs : env if env != ""])
-  source = "./custom_vpc"
-  env = "${each.value}"
+//workspace를 사용하면 환경별로 구분할 수 있다.
+//terraform 명령어는 왠만하면 root main에서만 사용하는게 좋다.
+module "main_vpc" {
+  source   = "./custom_vpc"
+  env      = terraform.workspace
 }
 
 resource "aws_s3_bucket" "tf_backend" {
+  count = terraform.workspace == "default" ? 1 : 0
   bucket = "junho-tf-backend-bucket"
   acl    = "private"
-  
+
   versioning {
     enabled = true
   }
 
   tags = {
-    Name        = "Terraform-bucket"
+    Name = "Terraform-bucket"
   }
 }
+
+//eip는 과금이 발생할 수 있으니 주의
+# resource "aws_eip" "eip_temp"{
+#   provisioner "local-exec" {
+#     command = "echo ${aws_eip.eip_temp.public_ip} > eip.txt"
+#   }
+
+#   tags = {
+#     Name = "temp"
+#   }
+#   }
