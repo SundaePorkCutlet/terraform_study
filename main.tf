@@ -52,7 +52,7 @@ module "default_vpc" {
 resource "aws_instance" "web" {
   count         = 2
   ami           = "ami-0e6f2b2fa0ca704d0"
-  instance_type = "t2.micro"
+  instance_type = "t3.micro"
 
   subnet_id = module.default_vpc.public_subnets[count.index]
 
